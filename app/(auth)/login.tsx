@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
   Image,
@@ -71,8 +72,14 @@ export default function LoginScreen() {
         </View>
 
         {/* Signup */}
-        <Text style={styles.signup}>
-          Don’t have an account? <Text style={styles.signupLink}>Sign Up</Text>
+        <Text style={styles.signupLink}>
+          Don’t have an account?{" "}
+          <Text
+            style={styles.signupLink}
+            onPress={() => router.push("/(auth)/signup")}
+          >
+            Sign Up
+          </Text>
         </Text>
       </View>
     </LinearGradient>
