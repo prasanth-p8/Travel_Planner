@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -14,6 +15,47 @@ import {
 
 export default function SignupScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const [location, setLocation] = useState("");
+  const indianStates = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+
+    // Union Territories
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry",
+  ];
 
   return (
     <LinearGradient colors={["#f8cdda", "#c2e9fb"]} style={styles.wrapper}>
@@ -56,12 +98,18 @@ export default function SignupScreen() {
         />
 
         {/* Location */}
-        <TextInput
-          placeholder="Location"
-          style={styles.input}
-          keyboardType="default"
-          autoCapitalize="none"
-        />
+        <View style={styles.inputWrapper}>
+          <Picker
+            selectedValue={location}
+            onValueChange={(value) => setLocation(value)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Location" value="" />
+            {indianStates.map((state) => (
+              <Picker.Item key={state} label={state} value={state} />
+            ))}
+          </Picker>
+        </View>
 
         {/* Password */}
         <View style={styles.passwordBox}>
@@ -201,6 +249,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginBottom: 16,
+  },
+  inputWrapper: {
+    borderWidth: 1,
+    borderColor: "#eee",
+    borderRadius: 10,
+    backgroundColor: "#fafafa",
+    marginBottom: 14,
+    paddingHorizontal: 8,
+    justifyContent: "center",
+  },
+
+  picker: {
+    height: 50,
+    borderColor: "#eee",
+    outline: "none",
   },
   footer: {
     textAlign: "center",
