@@ -3,25 +3,30 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { Stack } from "expo-router";
+import { router, Stack, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
-// export const unstable_settings = {
-//   anchor: "(tabs)",
-// };
-
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // If user opens root "/", redirect to login
+    if (pathname === "/") {
+      router.replace("/(auth)/login");
+    }
+  }, [pathname]);
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/signup" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)/login" />
+        <Stack.Screen name="(auth)/signup" />
+        <Stack.Screen name="(tabs)" />
         <Stack.Screen
           name="modal"
           options={{ presentation: "modal", title: "Modal" }}

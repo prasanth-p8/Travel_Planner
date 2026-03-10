@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -13,6 +15,44 @@ import {
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter email and password");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch("http://YOUR_IP:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // Store JWT token
+      await AsyncStorage.setItem("token", data.token);
+
+      // Go to home
+      router.replace("/(tabs)");
+    } catch (error: any) {
+      Alert.alert("Login Failed", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <LinearGradient colors={["#f8cdda", "#c2e9fb"]} style={styles.wrapper}>
@@ -57,8 +97,10 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         {/* Login button */}
-        <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.loginText}>Login</Text>
+        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+          <Text style={styles.loginText}>
+            {loading ? "Logging in..." : "Login"}
+          </Text>
         </TouchableOpacity>
 
         {/* Divider */}
